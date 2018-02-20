@@ -13,9 +13,12 @@ provider:
   region: eu-west-1
 
 functions:
-  hello:
-    handler: handler.hello
+  anonymous:
+    handler: handler.anonymous
     events:
       - http:
           method: get
-          path: hello
+          path: anonymous
+      - http:
+          method: post
+          path: anonymous

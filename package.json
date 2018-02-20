@@ -5,11 +5,17 @@
   "description": "Slack command for anonymous posting",
   "main": "handler.js",
   "scripts": {
+    "invoke": "sls invoke -l -f anonymous",
+    "deploy": "sls deploy function -f anonymous",
+    "full-deploy": "sls deploy -v",
+    "logs": "sls logs -f anonymous",
     "test": "tslint -p . -t verbose"
   },
   "devDependencies": {
     "@types/aws-lambda": "0.0.32",
     "@types/node": "6.0.101",
+    "@types/node-fetch": "1.6.7",
+    "@types/qs": "6.5.1",
     "serverless": "1.26.0",
     "serverless-webpack": "4.3.0",
     "ts-loader": "2.3.7",
@@ -17,5 +23,9 @@
     "typescript": "2.7.2",
     "webpack": "3.11.0"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "node-fetch": "2.0.0",
+    "qs": "6.5.1"
+  }
 }

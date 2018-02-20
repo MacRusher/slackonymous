@@ -1,13 +1,41 @@
-import { APIGatewayEvent, Callback, Context, Handler } from 'aws-lambda';
+import {APIGatewayEvent, Callback, Context, Handler} from 'aws-lambda';
+import fetch from 'node-fetch';
+import {parse} from 'qs';
 
-export const hello: Handler = (event: APIGatewayEvent, context: Context, cb: Callback) => {
-  const response = {
-    body: JSON.stringify({
-      input: event,
-      message: 'Go Serverless Webpack (Typescript) v1.0! Your function executed successfully!',
-    }),
-    statusCode: 200,
-  };
+export const anonymous: Handler = (event: APIGatewayEvent, context: Context, cb: Callback) => {
+    // Get only the message text from the request and ignore other metadata to keep it private
+    const {text = '', response_url} = parse(event.body || '');
 
-  cb(null, response);
+    if (!text || !response_url) {
+        cb(null, {
+            body: JSON.stringify({
+                response_type: 'ephemeral',
+                text: 'Invalid message',
+            }),
+            statusCode: 200,
+        });
+        return;
+    }
+
+    // Reply with the same text in the same channel, but anonymously
+    fetch(response_url, {
+        body: JSON.stringify({
+            response_type: 'in_channel',
+            text,
+        }),
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        method: 'POST',
+    }).catch(err => console.error(err));
+
+    // Respond to the original request
+    cb(null, {
+        body: JSON.stringify({
+            response_type: 'ephemeral',
+            text: 'Twoja wiadomość zostanie opublikowana anonimowo.\n' +
+            'Dziękujemy za skorzystanie z usług AnonimowychVazcoPytań :ghost:',
+        }),
+        statusCode: 200,
+    });
 };
