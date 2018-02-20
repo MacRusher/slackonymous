@@ -1,13 +1,16 @@
 service:
-  name: aws-nodejs-typescript
+  name: slackonymous
 
-# Add the serverless-webpack plugin
+frameworkVersion: "~1.26"
+
 plugins:
   - serverless-webpack
 
 provider:
   name: aws
   runtime: nodejs6.10
+  stage: prod
+  region: eu-west-1
 
 functions:
   hello:
